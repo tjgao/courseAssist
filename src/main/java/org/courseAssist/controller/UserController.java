@@ -59,6 +59,7 @@ public class UserController {
 			uService.chgPasswordById((Integer) uid, newp);
 			h.put("code", 0);
 		} catch (Exception e) {
+			logger.info(e.toString());
 			h.put("code", 2);
 			h.put("msg", "修改密码时发生异常！");
 		}
@@ -71,8 +72,7 @@ public class UserController {
 		try{
 			name = new String(name.getBytes("ISO8859-1"), "utf-8");
 		} catch(Exception e) {
-			e.printStackTrace();
-			logger.info("Wrong encoding, this may need to be fixed.");
+			logger.info(e.toString());
 			name = "";
 		}
 		HashMap<String, Object> h = new HashMap<String, Object>();

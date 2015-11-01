@@ -12,6 +12,8 @@ import org.courseAssist.model.User;
 import org.courseAssist.service.QRAuthService;
 import org.courseAssist.service.UserService;
 import org.courseAssist.utils.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,8 @@ public class QRAuthController {
 	@Autowired
 	private UserService uService;
 	
+	private static final Logger logger = LoggerFactory.getLogger(QRAuthController.class);
+
 	@RequestMapping(value="/api/qr/create/{ip}/{port}/{code}", method=RequestMethod.POST) 
 	public @ResponseBody HashMap<String, Object> qrcreate(@PathVariable("ip") String ip, @PathVariable("port") int port,
 			@PathVariable("code") String code)	{
@@ -40,6 +44,7 @@ public class QRAuthController {
 			qService.insertQRAuth(q);
 			h.put("code", 0);
 		} catch(Exception e) {
+			logger.info(e.toString());
 			h.put("code", 2);
 			h.put("msg", "操作中出现异常！");
 		}
@@ -67,6 +72,7 @@ public class QRAuthController {
 			h.put("code", 0);
 			h.put("token", q.getToken());
 		} catch(Exception e) {
+			logger.info(e.toString());
 			h.put("msg", "操作中发生异常！");
 			h.put("code", 2);
 		}
@@ -80,6 +86,7 @@ public class QRAuthController {
 			qService.cleanQRAuth(code);
 			h.put("code", 0);
 		} catch(Exception e) {
+			logger.info(e.toString());
 			h.put("msg", "操作中发生异常！");
 			h.put("code", 2);
 		}
@@ -126,6 +133,7 @@ public class QRAuthController {
 			}
 			h.put("data", l);
 		} catch (Exception e) {
+			logger.info(e.toString());
 			h.put("code", 2);
 			h.put("msg", "操作中发生异常！");
 		}
