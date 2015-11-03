@@ -26,7 +26,6 @@ public class SessionInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1,
 			Object arg2) throws Exception {
-		System.out.println("I see what you are doing");
 		Object o = arg0.getSession().getAttribute("USERID");
 		if( o != null ) return true;
 		return false;
