@@ -1,11 +1,12 @@
 package org.courseAssist.model;
 
-public class CourseWare {
+public class SessionWare {
 	private int id;
 	private String name;
 	private String description;
 	private String filename;
 	private int uid;
+	private int sid;
 	public int getId() {
 		return id;
 	}
@@ -35,5 +36,11 @@ public class CourseWare {
 	}
 	public void setUid(int uid) {
 		this.uid = uid;
+	}
+	public int getSid() {
+		return sid;
+	}
+	public void setSid(int sid) {
+		this.sid = sid;
 	}
 }

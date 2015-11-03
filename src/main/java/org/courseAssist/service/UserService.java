@@ -32,4 +32,8 @@ public class UserService {
 	public void chgPasswordById(int id, String pwd) {
 		uMapper.chgPasswordById(id, pwd);
 	}
+	
+	public User getUserBySidUid(int sid, int uid) {
+		return uMapper.getUserBySidUid(sid, uid);
+	}
 }

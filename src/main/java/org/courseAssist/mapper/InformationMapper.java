@@ -2,6 +2,7 @@ package org.courseAssist.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.courseAssist.model.Information;
 
@@ -11,5 +12,6 @@ public interface InformationMapper {
 			+ " title, a.content as content, a.time as time, b.deptname as deptName"
 			+ " from information as a, dept as b where a.deptid=b.id and a.deptid=#{deptid}"
 			+ " and a.type=#{type}) order by id desc limit #{start},#{limit}")
-	List<Information> getInformation(int uniid, int deptid, int type, int start, int limit);
+	List<Information> getInformation(@Param("uniid") int uniid, @Param("deptid") int deptid, @Param("type") int type, 
+			@Param("start") int start, @Param("limit") int limit);
 }

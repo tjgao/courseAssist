@@ -30,6 +30,7 @@ public class InformationController {
 			List<Information> l = iService.getInformation(uniid, deptid, type, start, limit);
 			h.put("code", 0);
 			h.put("data", l);
+			h.put("count", l.size());
 		} catch(Exception e) {
 			logger.info(e.toString());
 			h.put("code", 2);

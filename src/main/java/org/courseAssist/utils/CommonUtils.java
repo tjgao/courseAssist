@@ -2,7 +2,6 @@ package org.courseAssist.utils;
 
 import java.awt.color.CMMException;
 import java.awt.image.BufferedImage;
-import java.awt.image.renderable.ParameterBlock;
 import java.io.File;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -22,6 +21,13 @@ public class CommonUtils {
 		if (i > 0)
 			return fileName.substring(i + 1);
 		return "";
+	}
+	
+	public static String getFileNameBase(String fileName) {
+		int i = fileName.lastIndexOf(File.separator);
+		int j = fileName.lastIndexOf('.');
+		if( j > 0 ) return fileName.substring(i+1,j);
+		return fileName.substring(i+1);
 	}
 
 	public static String md5(String text) {

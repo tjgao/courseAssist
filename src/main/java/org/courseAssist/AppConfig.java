@@ -1,9 +1,10 @@
 package org.courseAssist;
+import java.io.File;
 import java.util.HashMap;
-
 
 public class AppConfig extends HashMap<String, Object> {
 	public static final String bookingTime = "bookintTime";
+	public static final String uploadDir = "resources" + File.separator + "sessionWare";
 	private static final AppConfig m = new AppConfig();
 	private AppConfig(){}
 	

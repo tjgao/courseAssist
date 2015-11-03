@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.courseAssist.mapper.CourseSessionMapper;
 import org.courseAssist.model.CourseSession;
+import org.courseAssist.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,11 @@ public class CourseSessionService {
 		return csMapper.getCourseSessionByUID(uid);
 	}
 	
-	public String getLecturerBySID(int sid) {
-		return csMapper.getLecturerBySID(sid);
+	public String getLecturerNameBySID(int sid) {
+		return csMapper.getLecturerNameBySID(sid);
+	}
+	
+	public User getLecturerBySID(int sid) {
+		return csMapper.getLecturerBySid(sid);
 	}
 }

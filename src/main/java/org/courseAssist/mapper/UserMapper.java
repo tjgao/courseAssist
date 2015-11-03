@@ -23,4 +23,7 @@ public interface UserMapper {
 	
 	@Update("update user set pwd=#{pwd} where name=#{name}")
 	void chgPasswordByName(@Param("name") String name, String pwd);
+	
+	@Select("select b.* from sessionUser as a, user as b where a.sid=#{sid} and a.uid=#{uid} and a.uid=b.id")
+	User getUserBySidUid(@Param("sid") int sid, @Param("uid") int uid);	
 }

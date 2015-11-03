@@ -20,7 +20,7 @@ public interface QRAuthMapper {
 	void updateQRAuth(QRAuth q);
 	
 	@Update("update authqr set token=#{token} where code=#{code}")
-	void updateToken(String code, String token);
+	void updateToken(@Param("code") String code, @Param("token") String token);
 	
 	@Delete("delete * from authqr where code = #{code}")
 	void cleanQRAuth(@Param("code") String code);

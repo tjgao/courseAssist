@@ -4,6 +4,8 @@ public class User {
 	private int id;
 	private String pid;
 	private String name;
+	private String nickname;
+	private String realname;
 	private int sex;
 	private String mobile;
 	private String email;
@@ -63,5 +65,17 @@ public class User {
 	}
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public String getRealname() {
+		return realname;
+	}
+	public void setRealname(String realname) {
+		this.realname = realname;
 	}
 }

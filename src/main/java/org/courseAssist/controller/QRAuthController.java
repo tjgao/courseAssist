@@ -132,6 +132,7 @@ public class QRAuthController {
 					a.setToken(CommonUtils.md5(a.getToken()));
 			}
 			h.put("data", l);
+			h.put("count", l.size());
 		} catch (Exception e) {
 			logger.info(e.toString());
 			h.put("code", 2);

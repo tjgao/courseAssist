@@ -26,7 +26,7 @@ public class UserController {
 	@Autowired
 	UserService uService;
 
-	@RequestMapping(value="/api/good", method=RequestMethod.GET)
+	@RequestMapping(value="/api/user/good", method=RequestMethod.GET)
 	public @ResponseBody HashMap<String, Object> good(HttpServletRequest req) {
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("code", 0);
@@ -36,7 +36,7 @@ public class UserController {
 		return h;
 	}
 	
-	@RequestMapping(value="/api/chgpwd/{oldp}/{newp}", method=RequestMethod.POST)
+	@RequestMapping(value="/api/user/chgpwd/{oldp}/{newp}", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> chgpwd(HttpServletRequest req,
 			@PathVariable("oldp") String oldp, @PathVariable("newp") String newp) {
 		HashMap<String, Object> h = new HashMap<String, Object>();
@@ -66,7 +66,15 @@ public class UserController {
 		return h;
 	}
 	
-	@RequestMapping(value="/api/login/{name}/{pwd}", method=RequestMethod.GET)
+	@RequestMapping(value="/api/user/logout", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> logout(HttpSession s) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		s.removeAttribute("USERID");
+		h.put("code", 0);
+		return h;
+	}
+
+	@RequestMapping(value="/api/user/login/{name}/{pwd}", method=RequestMethod.GET)
 	public  @ResponseBody HashMap<String, Object> login(HttpSession s, @PathVariable("name") String name, 
 			@PathVariable("pwd") String pwd) {
 		try{

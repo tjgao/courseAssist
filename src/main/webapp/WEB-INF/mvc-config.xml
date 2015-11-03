@@ -44,11 +44,25 @@
 		<property name="basePackage" value="org.courseAssist.mapper" />
 	</bean>
 
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		p:defaultEncoding="UTF-8" p:maxUploadSize="20971520"
+		p:uploadTempDir="#{systemProperties['java.io.tmpdir']}/_courseAssist">
+	</bean>
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/views/" p:suffix=".jsp" />
+
+<mvc:interceptors>
+	<mvc:interceptor>
+		<mvc:mapping path="/api/**"/>
+		<mvc:exclude-mapping path="/api/login/**"/>
+		<bean class="org.courseAssist.SessionInterceptor">
+		</bean>
+	</mvc:interceptor>
+</mvc:interceptors>	
 
 </beans>
