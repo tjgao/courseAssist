@@ -4,6 +4,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.courseAssist.utils.CommonUtils;
+
 
 public class AppConfigListener implements ServletContextListener {
 
@@ -23,6 +25,13 @@ public class AppConfigListener implements ServletContextListener {
 			cfg.put(AppConfig.bookingTime, seconds);
 		} catch(Exception e) {
 			cfg.put(AppConfig.bookingTime, 10800);
+		}
+		
+		// create directories if not exist
+		try{
+			CommonUtils.createDirs(AppConfig.uploadDir);
+			CommonUtils.createDirs(AppConfig.headDir);
+		} catch(Exception e) {
 		}
 	}
 

@@ -4,23 +4,18 @@ import java.util.Date;
 
 public class SessionMsg {
 	private int id;
-	private int sid;
 	private int sender;
 	private int receiver;
 	private String title;
 	private String content;
 	private Date time;
+	private String senderName;
+	private String senderHead;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public int getSid() {
-		return sid;
-	}
-	public void setSid(int sid) {
-		this.sid = sid;
 	}
 	public int getSender() {
 		return sender;
@@ -51,5 +46,17 @@ public class SessionMsg {
 	}
 	public void setTime(Date time) {
 		this.time = time;
+	}
+	public String getSenderName() {
+		return senderName;
+	}
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
+	}
+	public String getSenderHead() {
+		return senderHead;
+	}
+	public void setSenderHead(String senderHead) {
+		this.senderHead = senderHead;
 	}
 }

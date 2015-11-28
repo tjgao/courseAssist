@@ -13,7 +13,7 @@ public interface QRAuthMapper {
 	@Select("select * from authqr where code = #{code}")
 	QRAuth getQRAuthByCode(@Param("code") String code);
 	
-	@Insert("insert into authqr (code, ip, port) values (#{code}, #{ip}, #{port})")
+	@Insert("insert into authqr (code, ip, port, createtime) values (#{code}, #{ip}, #{port}, now())")
 	void insertQRAuthByCode(QRAuth q);
 	
 	@Update("update authqr set token=#{token}, uid=#{uid}, sid=#{sid}, time=#{time} where code = #{code}")
@@ -25,6 +25,7 @@ public interface QRAuthMapper {
 	@Delete("delete * from authqr where code = #{code}")
 	void cleanQRAuth(@Param("code") String code);
 	
-	@Select("select * from authqr where sid=#{sid} and timestampdiff(second, time, now()) < #{limit}")
-	List<QRAuth> getQRAuthBySid(@Param("sid") int sid, @Param("limit") int seconds);
+	@Select("select * from authqr where sid=#{sid} and token is not null "
+			+ "and timestampdiff(second, time, now()) < #{limit} order by id desc limit 1")
+	QRAuth getQRAuthBySid(@Param("sid") int sid, @Param("limit") int seconds);
 }

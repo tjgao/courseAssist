@@ -9,7 +9,10 @@ public class CourseSession {
 	private Date endDate;
 	private String deptName;
 	private String uniName;
+	private int uid;
 	private String lecturer;
+	private String lecturerHeader;
+	private char tag;
 	public int getSid() {
 		return sid;
 	}
@@ -25,8 +28,8 @@ public class CourseSession {
 	public Date getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartDate(Date startDate) {													
+		this.startDate = startDate;																	
 	}
 	public Date getEndDate() {
 		return endDate;
@@ -51,5 +54,23 @@ public class CourseSession {
 	}
 	public void setLecturer(String lecturer) {
 		this.lecturer = lecturer;
+	}
+	public char getTag() {
+		return tag;
+	}
+	public void setTag(char tag) {
+		this.tag = tag;
+	}
+	public String getLecturerHeader() {
+		return lecturerHeader;
+	}
+	public void setLecturerHeader(String lecturerHeader) {
+		this.lecturerHeader = lecturerHeader;
+	}
+	public int getUid() {
+		return uid;
+	}
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 }

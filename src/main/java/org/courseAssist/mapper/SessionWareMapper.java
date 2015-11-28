@@ -15,7 +15,8 @@ public interface SessionWareMapper {
 	@Select("select * from sessionWare where id=#{id}")
 	SessionWare getSessionWare(@Param("id") int id);
 	
-	@Insert("insert into sessionWare (name, description, filename, sid, uid) values (#{name},#{description},#{filename},#{sid},#{uid}")
+	@Insert("insert into sessionWare (name, description, filename, sid, uid) "
+			+ "values (#{name},#{description},#{filename},#{sid},#{uid})")
 	void uploadSessionWare(SessionWare s);
 	
 	@Delete("delete from sessionWare where id=#{id}")

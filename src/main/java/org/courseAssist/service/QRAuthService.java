@@ -27,7 +27,7 @@ public class QRAuthService {
 		mapper.cleanQRAuth(code);
 	}
 	
-	public List<QRAuth> getQRAuthBySid(int sid, int seconds) {
+	public QRAuth getQRAuthBySid(int sid, int seconds) {
 		return mapper.getQRAuthBySid(sid, seconds);
 	}
 }

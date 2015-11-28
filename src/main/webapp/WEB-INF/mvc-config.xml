@@ -18,13 +18,13 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://127.0.0.1:3306/courses?autoReconnect=true&amp;createDatabaseIfNotExist=true&amp;useUnicode=true" />
+			value="jdbc:mysql://127.0.0.1:3306/courses?autoReconnect=true&amp;createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8" />
 		<property name="username" value="course" />
 		<property name="password" value="courses" />
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg index="0" ref="sqlSessionFactory" />
+	<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
@@ -59,8 +59,12 @@
 <mvc:interceptors>
 	<mvc:interceptor>
 		<mvc:mapping path="/api/**"/>
-		<mvc:exclude-mapping path="/api/login/**"/>
-		<bean class="org.courseAssist.SessionInterceptor">
+		<mvc:exclude-mapping path="/api/user/login/**"/>
+		<mvc:exclude-mapping path="/api/user/logout"/>
+		<mvc:exclude-mapping path="/api/user/good"/>
+		<mvc:exclude-mapping path="/api/qr/create/**"/>
+		<mvc:exclude-mapping path="/api/qr/wait/**"/>
+		<bean class="org.courseAssist.TokenInterceptor">
 		</bean>
 	</mvc:interceptor>
 </mvc:interceptors>	

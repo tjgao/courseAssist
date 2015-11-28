@@ -71,6 +71,11 @@ public class CommonUtils {
 		cleanDirectory(f);
 	}
 
+	public static boolean createDirs(String dirs) {
+		File f = new File(dirs);
+		return f.mkdirs();
+	}
+	
 	public static boolean moveFile(String srcFile, String dstDir) {
 		try {
 			File src = new File(srcFile);
@@ -84,7 +89,7 @@ public class CommonUtils {
 
 	public static String getTempDir() {
 		String t = System.getProperties().getProperty("java.io.tmpdir")
-				+ File.separator + "_iKuguan";
+				+ File.separator + "_TMP_TJ";
 		File f = new File(t);
 		if (f.exists()) {
 			if (f.isFile())
@@ -143,7 +148,7 @@ public class CommonUtils {
 	
 	public static long ip2int(String ip) {
 		long val = 0;
-		String[] slices = ip.split(".");
+		String[] slices = ip.split("\\.");
 		if( slices == null || slices.length < 4 ) return 0;
 		for( String s : slices ) {
 			val *= 256;

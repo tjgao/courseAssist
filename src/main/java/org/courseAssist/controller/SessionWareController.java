@@ -82,33 +82,49 @@ public class SessionWareController {
 		}
 	}
 	
-	@RequestMapping(value = "/api/sessionWare/upload/{sid}/{uid}", method = RequestMethod.POST)
+	@RequestMapping(value="/api/sessionWare/query/{sid}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> warelist(@PathVariable("sid") int sid) {
+		HashMap<String, Object> h = new HashMap();
+		try{
+			List<SessionWare> lsw = swService.getAllSessionWare(sid);
+			h.put("code", 0);
+			h.put("count", lsw.size());
+			h.put("data", lsw);
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value = "/api/sessionWare/upload/{sid}", method = RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> upload(
+			HttpServletRequest req,
 			@RequestParam("file") MultipartFile file, @PathVariable("sid") int sid, 
-			@PathVariable("uid") int uid, @RequestParam(value="description", required=false) String description, 
-			@RequestParam("filename") String filename, @RequestParam("name") String name) {
+			@RequestParam(value="description", required=false) String description, 
+			@RequestParam("name") String name,
+			@RequestParam("ext") String ext) {
+		logger.debug("I am woken up : {}", name);
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		if (!file.isEmpty()) {
 			try {
-				StringBuffer sb = new StringBuffer();
-				String fn = file.getName();
-				String ext = CommonUtils.getFileNameExtension(fn);
-				String base = CommonUtils.getFileNameBase(fn);
+				int uid = Integer.parseInt((String)req.getAttribute("uid"));
+				if( ext == null || ext.isEmpty() ) ext = ".pptx";
 				Date now = new Date();
-				sb.append(base);
-				sb.append("-");
-				sb.append(CommonUtils.md5(now.toString()));
-				sb.append(".");
-				sb.append(ext);
-				file.transferTo(new File(AppConfig.uploadDir + File.separator + sb.toString()));
+				String fn = sid + "_" + CommonUtils.md5(now.toString()) + ext;
+				String full = servletCtx.getRealPath("/") + File.separator + AppConfig.uploadDir + File.separator + fn;
+				file.transferTo(new File(full));
 				SessionWare s = new SessionWare();
 				s.setSid(sid);
 				s.setName(name);
 				s.setDescription(description);
-				s.setFilename(filename);
+				s.setFilename(AppConfig.uploadDir + File.separator + fn);
+				s.setUid(uid);
 				swService.uploadSessionWare(s);
 				h.put("code", 0);
 			} catch (Exception e) {
+				e.printStackTrace();
 				h.put("code", 2);
 				h.put("msg", "操作中发生异常！");
 			}

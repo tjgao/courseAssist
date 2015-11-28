@@ -3,6 +3,8 @@ package org.courseAssist.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.courseAssist.model.CourseSession;
 import org.courseAssist.model.User;
 import org.courseAssist.service.CourseSessionService;
@@ -26,9 +28,10 @@ public class SessionController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SessionController.class);
 	
-	@RequestMapping(value="/api/courseSession/query/{uid}", method=RequestMethod.GET)
-	public @ResponseBody HashMap<String, Object> courseSession(@PathVariable("uid") int uid) {
+	@RequestMapping(value="/api/courseSession/query", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> courseSession(HttpServletRequest req) {
 		HashMap<String, Object> h = new HashMap<String, Object>();
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
 		try{
 			List<CourseSession> l = csService.getCourseSessionByUID(uid);
 			h.put("code", 0);
@@ -38,6 +41,36 @@ public class SessionController {
 			logger.info(e.toString());
 			h.put("code", 2);
 			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/courseSession/priv/{sid}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> courseSessionPriv(HttpServletRequest req, @PathVariable("sid") int sid) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		try{
+			h.put("code", 0);
+			h.put("lecturer", csService.islecturer(uid, sid));
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/courseSession/{sid}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> courseSession(@PathVariable("sid") int sid) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		try{
+			CourseSession cs = csService.getCourseSession(sid);
+			h.put("code", 0);
+			h.put("data", cs);
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常!");
 		}
 		return h;
 	}

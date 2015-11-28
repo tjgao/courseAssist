@@ -3,7 +3,7 @@ package org.courseAssist.controller;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.courseAssist.model.SessionMsg;
 import org.courseAssist.service.SessionMsgService;
@@ -24,13 +24,11 @@ public class SessionMsgController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SessionMsgController.class);
 
-	@RequestMapping(value="/api/courseSession/messages/{sid}/{start}/{limit}", method=RequestMethod.GET)
-	public @ResponseBody HashMap<String, Object> receivedMsg(HttpSession s, @PathVariable("sid") int sid, 
-			@PathVariable("start") int start, @PathVariable("limit") int limit) {
+	@RequestMapping(value="/api/courseSession/messages/receive/{id}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> receiveMsg(@PathVariable("id") int id) {
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		try{
-			Object o = s.getAttribute("USERID");
-			List<SessionMsg> l = smService.receivedMsg(sid, (Integer)o, start, limit);
+			List<SessionMsg> l = smService.receivedMsg(id);
 			h.put("data", l);
 			h.put("size", l.size());
 			h.put("code", 0);
@@ -42,17 +40,125 @@ public class SessionMsgController {
 		return h;
 	}
 	
-	@RequestMapping(value="/api/courseSession/messages/send/{sid}/{receiver}", method=RequestMethod.POST)
-	public @ResponseBody HashMap<String, Object> sendMsg(HttpSession s, @PathVariable("sid") int sid, 
-			@PathVariable("receiver") int receiver, @RequestParam(value="title", required=false) String title, 
-			@RequestParam("content") String content) {
+	@RequestMapping(value="/api/courseSession/messages/loadnew/{id}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> loadnewMsg( HttpServletRequest req, 
+			@PathVariable("id") int id) {
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		try{
-			Object o = s.getAttribute("USERID");
+			List<SessionMsg> l = smService.receiveNewMsg(uid, id);
+			if( l.size() > 0 ) h.put("data", l);
+			h.put("size", l.size());
+			h.put("code", 0);
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/courseSession/messages/load/{id}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> loadMsg(@PathVariable("id") int id) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		try{
+			SessionMsg m = smService.readMsg(id);
+			if ( m != null ) {
+				h.put("data", m);
+				h.put("code", 0);
+			} else {
+				h.put("code", 1);
+				h.put("msg", "此消息不存在！");
+				logger.info("Trying to read msg {}, but it does not exist", id);
+			}
+		}catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/courseSession/messages/loadold/{id}/{limit}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> loadoldMsg(HttpServletRequest req, 
+			@PathVariable("id") int id, 
+			@PathVariable("limit") int limit) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		try{
+			List<SessionMsg> l = smService.receiveOldMsg(uid, id, limit);
+			if( l.size() > 0 ) h.put("data", l);
+			h.put("size", l.size());
+			h.put("code", 0);
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+
+	@RequestMapping(value="/api/courseSession/messages/receive/{start}/{limit}", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> receivedMsg(HttpServletRequest req,  
+			@PathVariable("start") int start, @PathVariable("limit") int limit) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		try{
+			List<SessionMsg> l = smService.receivedMsg(uid, start, limit);
+			h.put("data", l);
+			h.put("size", l.size());
+			h.put("code", 0);
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/courseSession/messages/sendall", method=RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> sendAll(
+			@RequestParam(value="receiver") String receiver, HttpServletRequest req, 
+			@RequestParam(value="title", required=false) String title, @RequestParam("content") String content) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		try{
+			content = new String(content.getBytes("ISO8859-1"), "utf-8");
+			title = new String(title.getBytes("ISO8859-1"), "utf-8");
+			String[] arr = receiver.split(",");
+			for( String ss : arr ) {
+				int id = 0;
+				try{
+					id = Integer.parseInt(ss.trim());
+				} catch(Exception e) {
+					continue;
+				}
+				SessionMsg sm = new SessionMsg();
+				sm.setReceiver(id);
+				sm.setSender(uid);
+				sm.setTitle(title == null || title.isEmpty() ? "NO SUBJECT": title);
+				sm.setContent(content);
+				smService.sendMsg(sm);
+				h.put("code", 0);
+			}
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 2);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/courseSession/messages/send/{receiver}", method=RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> sendMsg( HttpServletRequest req, 
+			@PathVariable("receiver") int receiver, @RequestParam(value="title", required=false) String title, 
+			@RequestParam("content") String content) {
+		int uid = (Integer)req.getAttribute("uid");
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		try{
 			SessionMsg sm = new SessionMsg();
-			sm.setSid(sid);
 			sm.setReceiver(receiver);
-			sm.setSender((Integer)o);
+			sm.setSender(uid);
 			sm.setTitle((title == null || title.isEmpty()) ? "NO SUBJECT":title);
 			sm.setContent(content);
 			smService.sendMsg(sm);

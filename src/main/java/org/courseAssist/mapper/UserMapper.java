@@ -1,5 +1,7 @@
 package org.courseAssist.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -26,4 +28,7 @@ public interface UserMapper {
 	
 	@Select("select b.* from sessionUser as a, user as b where a.sid=#{sid} and a.uid=#{uid} and a.uid=b.id")
 	User getUserBySidUid(@Param("sid") int sid, @Param("uid") int uid);	
+	
+	@Select("select * from sessionUser as a, user as b where a.sid=#{sid} and a.uid=b.id")
+	List<User> getUsersBySid(@Param("sid") int sid);
 }

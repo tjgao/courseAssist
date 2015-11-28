@@ -12,6 +12,7 @@ public class User {
 	private int deptid;
 	private int verified;
 	private String pwd;
+	private String headimg;
 	public int getId() {
 		return id;
 	}
@@ -77,5 +78,11 @@ public class User {
 	}
 	public void setRealname(String realname) {
 		this.realname = realname;
+	}
+	public String getHeadimg() {
+		return headimg;
+	}
+	public void setHeadimg(String headimg) {
+		this.headimg = headimg;
 	}
 }

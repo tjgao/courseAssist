@@ -1,5 +1,7 @@
 package org.courseAssist.service;
 
+import java.util.List;
+
 import org.courseAssist.mapper.UserMapper;
 import org.courseAssist.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +37,9 @@ public class UserService {
 	
 	public User getUserBySidUid(int sid, int uid) {
 		return uMapper.getUserBySidUid(sid, uid);
+	}
+	
+	public List<User> getUsersBySid(int sid) {
+		return uMapper.getUsersBySid(sid);
 	}
 }
