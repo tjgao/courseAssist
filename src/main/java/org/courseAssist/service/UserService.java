@@ -2,8 +2,10 @@ package org.courseAssist.service;
 
 import java.util.List;
 
+import org.courseAssist.mapper.SessionMapper;
 import org.courseAssist.mapper.UserMapper;
 import org.courseAssist.model.User;
+import org.courseAssist.model.UserExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
 	@Autowired
 	UserMapper uMapper;
+	@Autowired
+	SessionMapper sMapper;
+	
 	public User getUserByNamePwd(String name, String pwd) {
 		return uMapper.getUserByNamePwd(name, pwd);
 	}
@@ -41,5 +46,17 @@ public class UserService {
 	
 	public List<User> getUsersBySid(int sid) {
 		return uMapper.getUsersBySid(sid);
+	}
+	
+	public List<UserExt> getUserExtsBySid(int sid) {
+		List<UserExt> lu = uMapper.getUserExtBySid(sid);
+		int shouldAttend, actualAttend;
+		shouldAttend = sMapper.shouldAttend(sid);
+		for( UserExt u : lu) {
+			actualAttend = sMapper.actualAttend(sid,u.getId());
+			u.setActualAttend(actualAttend);
+			u.setShouldAttend(shouldAttend);
+		}
+		return lu;
 	}
 }

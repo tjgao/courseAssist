@@ -13,6 +13,8 @@ public class User {
 	private int verified;
 	private String pwd;
 	private String headimg;
+	private String uniname;
+	private String deptname;
 	public int getId() {
 		return id;
 	}
@@ -84,5 +86,17 @@ public class User {
 	}
 	public void setHeadimg(String headimg) {
 		this.headimg = headimg;
+	}
+	public String getUniname() {
+		return uniname;
+	}
+	public void setUniname(String uniname) {
+		this.uniname = uniname;
+	}
+	public String getDeptname() {
+		return deptname;
+	}
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
 	}
 }

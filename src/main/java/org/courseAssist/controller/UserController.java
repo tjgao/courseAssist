@@ -135,19 +135,24 @@ public class UserController {
 		String ppwd = CommonUtils.md5(pwd);
 		User u = uService.getUserByNamePwd(name, ppwd);
 		if (u == null) {
-			User uu = uService.getUserByName(name);
-			if (uu == null) {
+			u = uService.getUserByName(name);
+			if (u == null) {
 				h.put("code", 1);
 				h.put("msg", "用户名或密码错误！");
 			} else {
-				ppwd = uu.getPwd();
-				if ((ppwd == null || ppwd.isEmpty()) && pwd.equals(uu.getPid())) {
+				ppwd = u.getPwd();
+				if ((ppwd == null || ppwd.isEmpty()) && pwd.equals(u.getPid())) {
 					h.put("code", 0);
-					h.put("headimg", uu.getHeadimg());
-					h.put("nickname", uu.getNickname());
-					h.put("realname", uu.getRealname());
-					h.put("token", generateToken(uu.getId()));
-					h.put("uid", uu.getId());
+					h.put("email", u.getEmail());
+					h.put("pid", u.getPid());
+					h.put("mobile", u.getMobile());
+					h.put("headimg", u.getHeadimg());
+					h.put("nickname", u.getNickname());
+					h.put("realname", u.getRealname());
+					h.put("uid", u.getId());
+					h.put("uniname", u.getUniname());
+					h.put("deptname", u.getDeptname());
+					h.put("token", generateToken(u.getId()));
 				} else {
 					h.put("code", 1);
 					h.put("msg", "用户名或密码错误！");
@@ -155,10 +160,16 @@ public class UserController {
 			}
 		} else {
 			h.put("code", 0);
+			h.put("email", u.getEmail());
+			h.put("pid", u.getPid());
+			h.put("mobile", u.getMobile());
+			h.put("headimg", u.getHeadimg());
 			h.put("nickname", u.getNickname());
 			h.put("realname", u.getRealname());
-			h.put("token", generateToken(u.getId()));
 			h.put("uid", u.getId());
+			h.put("uniname", u.getUniname());
+			h.put("deptname", u.getDeptname());
+			h.put("token", generateToken(u.getId()));
 		}
 		return h;
 	}

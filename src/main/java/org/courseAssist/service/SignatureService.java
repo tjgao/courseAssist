@@ -29,6 +29,10 @@ public class SignatureService {
 		return sMapper.latestSig(sid);
 	}
 	
+	public String sigtoday(int sid, int uid, String date) {
+		return sMapper.sigtoday(sid, date, uid);
+	}
+	
 	public List<Attendance> statistics(int sid) {
 		return sMapper.statistics(sid);
 	}
