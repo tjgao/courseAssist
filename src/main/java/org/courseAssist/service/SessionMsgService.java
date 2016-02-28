@@ -3,9 +3,11 @@ package org.courseAssist.service;
 import java.util.List;
 
 import org.courseAssist.mapper.SessionMsgMapper;
+import org.courseAssist.model.MessageContent;
 import org.courseAssist.model.SessionMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SessionMsgService {
@@ -30,6 +32,12 @@ public class SessionMsgService {
 
 	public void sendMsg(SessionMsg sm) {
 		smMapper.sendMessage(sm);
+	}
+
+	@Transactional
+	public int storeMsg(MessageContent mc) {
+		smMapper.storeMsg(mc);
+		return smMapper.lastMsgId();
 	}
 	
 	public SessionMsg readMsg(int id) {

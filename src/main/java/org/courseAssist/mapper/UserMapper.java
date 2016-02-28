@@ -28,6 +28,9 @@ public interface UserMapper {
 	@Update("update user set pwd=#{pwd} where id=#{id}")
 	void chgPasswordById(@Param("id") int id, @Param("pwd") String pwd);
 	
+	@Update("update user set realname=#{realname}, mobile=#{mobile}, email=#{email} where id=#{id}")
+	void updateBasicUserInfo(@Param("id") int id, @Param("realname") String realname, @Param("mobile") String mobile, @Param("email") String email);
+	
 	@Update("update user set pwd=#{pwd} where name=#{name}")
 	void chgPasswordByName(@Param("name") String name, String pwd);
 	

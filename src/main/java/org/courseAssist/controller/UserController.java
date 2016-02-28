@@ -24,7 +24,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class UserController {
@@ -34,7 +36,7 @@ public class UserController {
 
 	@Autowired
 	UserService uService;
-
+	
 	@RequestMapping(value="/api/user/good", method=RequestMethod.GET)
 	public @ResponseBody HashMap<String, Object> good(HttpServletRequest req) {
 		HashMap<String, Object> h = new HashMap<String, Object>();
@@ -48,6 +50,30 @@ public class UserController {
 		} else {
 			h.put("code", 1);
 			h.put("msg", "Fail");
+		}
+		return h;
+	}
+	
+	@RequestMapping(value="/api/user/info", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, Object> userinfo(HttpServletRequest req) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		try {
+			User u = uService.getUserById(uid);
+			h.put("code", 0);
+			h.put("email", u.getEmail());
+			h.put("pid", u.getPid());
+			h.put("mobile", u.getMobile());
+			h.put("headimg", u.getHeadimg());
+			h.put("nickname", u.getNickname());
+			h.put("realname", u.getRealname());
+			h.put("uid", u.getId());
+			h.put("uniname", u.getUniname());
+			h.put("deptname", u.getDeptname());
+		} catch(Exception e) {
+			e.printStackTrace();
+			h.put("code", 1);
+			h.put("msg", "获取个人信息失败！");
 		}
 		return h;
 	}
@@ -174,4 +200,20 @@ public class UserController {
 		return h;
 	}
 	
+	@RequestMapping(value="/api/user/update", method=RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> update(HttpServletRequest req) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		String realname = (String)req.getAttribute("realname");
+		String email = (String)req.getAttribute("email");
+		String mobile = (String)req.getAttribute("mobile");
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		try {
+			uService.updateUserBasicInfo(uid, realname, mobile, email);
+			h.put("code", 0);
+		} catch(Exception e) {
+			h.put("code", 1);
+			h.put("msg", "更新用户信息时发生异常！");
+		}
+		return h;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.courseAssist.model.MessageContent;
 import org.courseAssist.model.SessionMsg;
 import org.courseAssist.service.SessionMsgService;
 import org.slf4j.Logger;
@@ -126,6 +127,11 @@ public class SessionMsgController {
 			content = new String(content.getBytes("ISO8859-1"), "utf-8");
 			title = new String(title.getBytes("ISO8859-1"), "utf-8");
 			String[] arr = receiver.split(",");
+			title = ( title == null || title.isEmpty() ) ? "NO SUBJECT" : title;
+			MessageContent mc = new MessageContent();
+			mc.setTitle(title);
+			mc.setContent(content);
+			int mid = smService.storeMsg(mc);
 			for( String ss : arr ) {
 				int id = 0;
 				try{
@@ -136,8 +142,7 @@ public class SessionMsgController {
 				SessionMsg sm = new SessionMsg();
 				sm.setReceiver(id);
 				sm.setSender(uid);
-				sm.setTitle(title == null || title.isEmpty() ? "NO SUBJECT": title);
-				sm.setContent(content);
+				sm.setMid(mid);
 				smService.sendMsg(sm);
 				h.put("code", 0);
 			}
@@ -156,11 +161,16 @@ public class SessionMsgController {
 		int uid = (Integer)req.getAttribute("uid");
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		try{
+			title = ( title == null || title.isEmpty() ) ? "NO SUBJECT" : title;
+			MessageContent mc = new MessageContent();
+			mc.setTitle(title);
+			mc.setContent(content);
+			int mid = smService.storeMsg(mc);
+			
 			SessionMsg sm = new SessionMsg();
 			sm.setReceiver(receiver);
 			sm.setSender(uid);
-			sm.setTitle((title == null || title.isEmpty()) ? "NO SUBJECT":title);
-			sm.setContent(content);
+			sm.setMid(mid);
 			smService.sendMsg(sm);
 			h.put("code", 0);
 		} catch(Exception e) {

@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class SessionMsg {
 	private int id;
+	private int mid;
 	private int sender;
 	private int receiver;
 	private String title;
@@ -58,5 +59,11 @@ public class SessionMsg {
 	}
 	public void setSenderHead(String senderHead) {
 		this.senderHead = senderHead;
+	}
+	public int getMid() {
+		return mid;
+	}
+	public void setMid(int mid) {
+		this.mid = mid;
 	}
 }

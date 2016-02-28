@@ -59,4 +59,8 @@ public class UserService {
 		}
 		return lu;
 	}
+	
+	public void updateUserBasicInfo(int id, String realname, String mobile, String email) {
+		uMapper.updateBasicUserInfo(id, realname, mobile, email);
+	}
 }
