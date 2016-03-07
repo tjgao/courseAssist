@@ -17,7 +17,10 @@ public class UserService {
 	SessionMapper sMapper;
 	
 	public User getUserByNamePwd(String name, String pwd) {
-		return uMapper.getUserByNamePwd(name, pwd);
+		User u = null;
+		u = uMapper.getUserByNamePwd(name, pwd);
+		if( u == null ) u = uMapper.getUserByNamePwd2(name, pwd);
+		return u;
 	}
 	
 	public User getUserByIdPwd(int id, String pwd) {
@@ -29,7 +32,10 @@ public class UserService {
 	}
 	
 	public User getUserByName(String name) {
-		return uMapper.getUserByName(name);
+		User u = null;
+		u = uMapper.getUserByName(name);
+		if( u == null ) u = uMapper.getUserByName2(name);
+		return u;
 	}
 	
 	public void chgPasswordByName(String name, String pwd) {

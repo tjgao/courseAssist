@@ -9,8 +9,17 @@ import org.courseAssist.model.User;
 import org.courseAssist.model.UserExt;
 
 public interface UserMapper {
-	@Select("select * from user where pwd = #{pwd} and name=#{name}")
+	
+	@Select("select a.id as id, a.deptid as deptid, a.pid as pid, a.nickname as nickname, a.sex as sex, a.priv as priv, b.id as uniid, "
+			+ "a.mobile as mobile, a.email as email, a.pwd as pwd, a.name as name, a.realname as "
+			+ "realname, a.headimg as headimg, b.name as uniname, c.deptname as deptname "
+			+ "from user as a, universities as b, dept as c where a.name=#{name} and a.pwd=#{pwd} "
+			+ "and a.deptid = c.id and c.uniid = b.id")
 	User getUserByNamePwd(@Param("name") String name, @Param("pwd") String pwd);
+	
+	@Select("select id, pid, deptid, nickname, sex, priv, 0 as uniid, mobile, email, pwd, name, "
+			+ "realname, headimg, '' as uniname, '' as deptname from user where name=#{name} and pwd=#{pwd} ")
+	User getUserByNamePwd2(@Param("name") String name, @Param("pwd") String pwd);	
 	
 	@Select("select * from user where pwd = #{pwd} and id=#{id}")
 	User getUserByIdPwd(@Param("id") int id, @Param("pwd") String pwd);
@@ -18,12 +27,16 @@ public interface UserMapper {
 	@Select("select * from user where id=#{id}")
 	User getUserById(@Param("id") int id);
 	
-	@Select("select a.id as id, a.pid as pid, a.nickname as nickname, a.sex as sex,"
+	@Select("select a.id as id, a.deptid as deptid, a.pid as pid, a.nickname as nickname, a.sex as sex, a.priv as priv, b.id as uniid,"
 			+ "a.mobile as mobile, a.email as email, a.pwd as pwd, a.name as name, a.realname as "
 			+ "realname, a.headimg as headimg, b.name as uniname, c.deptname as deptname "
 			+ "from user as a, universities as b, dept as c where a.name=#{name} and "
 			+ "a.deptid = c.id and c.uniid = b.id;")
 	User getUserByName(@Param("name") String name);
+	
+	@Select("select id, pid, deptid, nickname, sex, priv, mobile, email, pwd, name, realname, "
+			+ "headimg, '' as uniname, '' as deptname from user where name=#{name}")
+	User getUserByName2(@Param("name") String name);
 	
 	@Update("update user set pwd=#{pwd} where id=#{id}")
 	void chgPasswordById(@Param("id") int id, @Param("pwd") String pwd);

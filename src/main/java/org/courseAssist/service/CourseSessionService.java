@@ -20,6 +20,14 @@ public class CourseSessionService {
 		return lcs;
 	}
 	
+	public List<CourseSession> getCourseSessionByUIDPage(int uid, int start, int limit) {
+		List<CourseSession> lcs = csMapper.getAllCourseSessionByUIDPage(uid, start, limit);
+		for( CourseSession cs : lcs ) {
+			cs.setLecturer(getLecturerNameBySID(cs.getSid()));
+		}
+		return lcs;		
+	}
+	
 	public int islecturer(int uid, int sid) {
 		return csMapper.islecturer(uid, sid);
 	}
@@ -39,5 +47,41 @@ public class CourseSessionService {
 	
 	public User getLecturerBySID(int sid) {
 		return csMapper.getLecturerBySid(sid);
+	}
+	
+	public List<CourseSession> queryCourseSessionEx(String sname, int start, int limit) {
+		if( sname == null || sname.isEmpty() )
+			return csMapper.getAllCourseSessionPage(start, limit);
+		else {
+			sname = "%" + sname + "%";
+			return csMapper.queryCourseSessionPage(sname, start, limit);
+		}
+	}
+	
+	public int countCourseSessionEx(String sname) {
+		if( sname == null || sname.isEmpty() )
+			return csMapper.countCourseSession();
+		else {
+			sname = "%" + sname + "%";
+			return csMapper.countCourseSession2(sname);
+		}
+	}
+
+	public List<CourseSession> queryCourseSession(int uid, String sname, int start, int limit ) {
+		if( sname != null && !sname.isEmpty()) {
+			sname = "%" + sname + "%";
+			return csMapper.queryCourseSessionByUIDPage(uid, sname, start, limit);
+		}
+		else
+			return csMapper.getAllCourseSessionByUIDPage(uid, start, limit);
+	}
+	
+	public int countCourseSessionByUID(int uid, String sname) {
+		if( sname != null && !sname.isEmpty()) {
+			sname = "%" + sname + "%";
+			return csMapper.countCourseSessionByUID2(uid, sname);
+		}
+		else
+			return csMapper.countCourseSessionByUID(uid);
 	}
 }

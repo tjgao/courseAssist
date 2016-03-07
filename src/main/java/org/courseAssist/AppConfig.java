@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class AppConfig extends HashMap<String, Object> {
 	public static final String bookingTime = "bookintTime";
-	public static final String uploadDir = "resources" + File.separator + "upload";
+	public static final String uploadDir = "/resources" + File.separator + "upload";
 	public static final String headDir = "resources" + File.separator + "headimg";
 	public static final String signingKey = "_COURSEASSIST_" + new Date();
 	private static final AppConfig m = new AppConfig();

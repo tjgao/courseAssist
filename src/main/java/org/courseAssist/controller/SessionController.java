@@ -45,6 +45,40 @@ public class SessionController {
 		return h;
 	}
 	
+	@RequestMapping(value="/api/courseSession/querySession/{start}/{limit}", method=RequestMethod.GET) 
+	public @ResponseBody HashMap<String, Object> courseSessionQuery(HttpServletRequest req, 
+			@PathVariable("start") int start, @PathVariable("limit") int limit) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		Integer uid = Integer.parseInt((String)req.getAttribute("uid"));
+		String sname = req.getParameter("sname");
+		if( sname != null && !sname.isEmpty())
+			try {
+				sname = new String(sname.getBytes("ISO8859-1"), "utf-8");
+			} catch(Exception e) { sname = ""; }
+		logger.debug("search string:" + sname);
+		try{
+			User u = uService.getUserById(uid);
+			if( u == null ) throw new Exception();
+			List<CourseSession> l = null;
+			int sz = 0;
+			if( u.getPriv() != 0 ) {
+				l = csService.queryCourseSessionEx(sname, start, limit);
+				sz = csService.countCourseSessionEx(sname);
+			} else {
+				l = csService.queryCourseSession(uid, sname, start, limit);
+				sz = csService.countCourseSessionByUID(uid, sname);
+			}
+			h.put("data", l);
+			h.put("count", sz);
+			h.put("code", 0);
+		} catch(Exception e) {
+			logger.info(e.toString());
+			h.put("code", 1);
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	
 	@RequestMapping(value="/api/courseSession/priv/{sid}", method=RequestMethod.GET)
 	public @ResponseBody HashMap<String, Object> courseSessionPriv(HttpServletRequest req, @PathVariable("sid") int sid) {
 		HashMap<String, Object> h = new HashMap<String, Object>();

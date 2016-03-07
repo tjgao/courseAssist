@@ -21,4 +21,7 @@ public interface SessionWareMapper {
 	
 	@Delete("delete from sessionWare where id=#{id}")
 	void deleteSessionWare(@Param("id") int id);
+	
+	@Select("select * from sessionWare where id=#{id}")
+	SessionWare getcw(@Param("id") int id);
 }

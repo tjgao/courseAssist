@@ -27,4 +27,8 @@ public class SessionWareService {
 	public void deleteSessionWare(int id) {
 		swMapper.deleteSessionWare(id);
 	}
+	
+	public SessionWare getcw(int id) {
+		return swMapper.getcw(id);
+	}
 }

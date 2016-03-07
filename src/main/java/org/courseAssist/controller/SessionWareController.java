@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.courseAssist.AppConfig;
 import org.courseAssist.model.SessionWare;
+import org.courseAssist.model.User;
+import org.courseAssist.service.CourseSessionService;
 import org.courseAssist.service.SessionWareService;
+import org.courseAssist.service.UserService;
 import org.courseAssist.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class SessionWareController {
 	@Autowired
 	SessionWareService swService;
+	
+	@Autowired
+	CourseSessionService csService;
+	
+	@Autowired
+	UserService uService;
 
 	@Autowired
 	ServletContext servletCtx;	
@@ -98,6 +107,81 @@ public class SessionWareController {
 		return h;
 	}
 	
+	private boolean hasRightDel( int uid, int csId ) {
+		User u = uService.getUserById(uid);
+		if( u == null ) return false;
+		if( u != null && u.getPriv() != 0 ) return true;
+		else if( u != null ) {
+			SessionWare sw = swService.getSessionWare(csId);
+			if( sw == null ) return false;
+			if( csService.islecturer(uid, sw.getSid()) != 0 ) return true;
+		}
+		return false;
+	}
+	
+	private boolean hasRightUpload( int uid, int csId ) {
+		User u = uService.getUserById(uid);
+		if( u == null ) return false;
+		if( u != null && u.getPriv() != 0 ) return true;
+		else if( u != null ) {
+			if( csService.islecturer(uid, csId) != 0 ) return true;
+		}
+		return false;
+	}
+	
+	@RequestMapping(value="/api/sessionWare/delete/{csId}", method=RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> delete(HttpServletRequest req, @PathVariable("csId") int csId) {
+		int uid = Integer.parseInt((String)req.getAttribute("uid"));
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		h.put("code", 1);
+		try {
+			if( hasRightDel( uid, csId )) {
+				SessionWare sw = swService.getcw(csId);
+				swService.deleteSessionWare(csId);
+				h.put("code", 0);
+				// delete the file
+				String full = servletCtx.getRealPath("/") + File.separator + AppConfig.uploadDir + File.separator + sw.getFilename();
+				try {
+					File f = new File(full);
+					f.delete();
+				} catch(Exception e) { 
+					logger.debug(e.toString());
+				}
+			} else 
+				h.put("msg", "无权限修改课件");
+		} catch(Exception e) {
+			h.put("msg", "操作中发生异常！");
+		}
+		return h;
+	}
+	@RequestMapping(value="/api/uploadpic", method=RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> uploadpic(HttpServletRequest req, @RequestParam("file") MultipartFile file,
+			@RequestParam("ext") String ext) {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		h.put("code", 1);
+		if( !file.isEmpty()) {
+			try{
+				int uid = Integer.parseInt((String)req.getAttribute("uid"));
+				User u = uService.getUserById(uid);
+				if( u == null || u.getPriv() == 0 ) {
+					h.put("code", 1);
+					h.put("msg", "无上传权限");
+					return h;
+				}
+				Date now = new Date();
+				String fn = "pic_" + CommonUtils.md5(now.toString()) + ext;
+				String full = servletCtx.getRealPath("/") + File.separator + AppConfig.uploadDir + File.separator + fn;
+				file.transferTo(new File(full));
+				h.put("url", AppConfig.uploadDir + File.separator + fn);
+				h.put("code", 0);
+			} catch(Exception e) {
+				h.put("code", 1);
+				h.put("msg", "上传中发生异常");
+			}
+		}
+		return h;
+	}
+	
 	@RequestMapping(value = "/api/sessionWare/upload/{sid}", method = RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> upload(
 			HttpServletRequest req,
@@ -105,15 +189,20 @@ public class SessionWareController {
 			@RequestParam(value="description", required=false) String description, 
 			@RequestParam("name") String name,
 			@RequestParam("ext") String ext) {
-		logger.debug("I am woken up : {}", name);
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		if (!file.isEmpty()) {
 			try {
 				int uid = Integer.parseInt((String)req.getAttribute("uid"));
+				if( !hasRightUpload(uid, sid) ) {
+					h.put("code", 1);
+					h.put("msg", "无上传权限");
+					return h;
+				}
 				if( ext == null || ext.isEmpty() ) ext = ".pptx";
 				Date now = new Date();
 				String fn = sid + "_" + CommonUtils.md5(now.toString()) + ext;
 				String full = servletCtx.getRealPath("/") + File.separator + AppConfig.uploadDir + File.separator + fn;
+				logger.debug(full);
 				file.transferTo(new File(full));
 				SessionWare s = new SessionWare();
 				s.setSid(sid);

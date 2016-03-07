@@ -69,6 +69,8 @@ public class UserController {
 			h.put("realname", u.getRealname());
 			h.put("uid", u.getId());
 			h.put("uniname", u.getUniname());
+			h.put("uniid", u.getUniid());
+			h.put("deptid", u.getDeptid());
 			h.put("deptname", u.getDeptname());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -92,7 +94,14 @@ public class UserController {
 					h.put("code", 1);
 					return h;
 				}
+			} else {
+				if( !CommonUtils.md5(oldp).equals(pwd) ) {
+					h.put("msg", "原密码输入有误！");
+					h.put("code", 1);
+					return h;
+				}
 			}
+			newp = CommonUtils.md5(newp);
 			uService.chgPasswordById((Integer) uid, newp);
 			h.put("code", 0);
 		} catch (Exception e) {
@@ -177,6 +186,8 @@ public class UserController {
 					h.put("realname", u.getRealname());
 					h.put("uid", u.getId());
 					h.put("uniname", u.getUniname());
+					h.put("uniid", u.getUniid());
+					h.put("deptid", u.getDeptid());
 					h.put("deptname", u.getDeptname());
 					h.put("token", generateToken(u.getId()));
 				} else {
@@ -194,6 +205,8 @@ public class UserController {
 			h.put("realname", u.getRealname());
 			h.put("uid", u.getId());
 			h.put("uniname", u.getUniname());
+			h.put("uniid", u.getUniid());
+			h.put("deptid", u.getDeptid());
 			h.put("deptname", u.getDeptname());
 			h.put("token", generateToken(u.getId()));
 		}
@@ -203,14 +216,21 @@ public class UserController {
 	@RequestMapping(value="/api/user/update", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> update(HttpServletRequest req) {
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		String realname = (String)req.getAttribute("realname");
-		String email = (String)req.getAttribute("email");
-		String mobile = (String)req.getAttribute("mobile");
+		String realname = (String)req.getParameter("realname");
+		String email = (String)req.getParameter("email");
+		String mobile = (String)req.getParameter("mobile");
+		try {
+			realname = new String(realname.getBytes("ISO8859-1"), "utf-8");
+		} catch (Exception e) {
+			logger.info(e.toString());
+			realname = "";
+		}		
 		int uid = Integer.parseInt((String)req.getAttribute("uid"));
 		try {
 			uService.updateUserBasicInfo(uid, realname, mobile, email);
 			h.put("code", 0);
 		} catch(Exception e) {
+			logger.info(e.toString());
 			h.put("code", 1);
 			h.put("msg", "更新用户信息时发生异常！");
 		}

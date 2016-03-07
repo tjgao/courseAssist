@@ -10,11 +10,12 @@ public class User {
 	private String mobile;
 	private String email;
 	private int deptid;
-	private int verified;
+	private int priv;
 	private String pwd;
 	private String headimg;
 	private String uniname;
 	private String deptname;
+	private int uniid;
 	public int getId() {
 		return id;
 	}
@@ -57,12 +58,7 @@ public class User {
 	public void setDeptid(int deptid) {
 		this.deptid = deptid;
 	}
-	public int getVerified() {
-		return verified;
-	}
-	public void setVerified(int verified) {
-		this.verified = verified;
-	}
+
 	public String getPwd() {
 		return pwd;
 	}
@@ -98,5 +94,17 @@ public class User {
 	}
 	public void setDeptname(String deptname) {
 		this.deptname = deptname;
+	}
+	public int getPriv() {
+		return priv;
+	}
+	public void setPriv(int priv) {
+		this.priv = priv;
+	}
+	public int getUniid() {
+		return uniid;
+	}
+	public void setUniid(int uniid) {
+		this.uniid = uniid;
 	}
 }

@@ -30,9 +30,9 @@ public interface SessionMapper {
 			+ "where d.id=c.deptid and c.id = a.uid and a.sid=#{sid} and a.uid=b.uid group by a.uid")
 	List<Attendance> statistics(@Param("sid") int sid);
 	
-	@Select("select count(*) from sessioncounter where sid=#{sid}")
+	@Select("select count(*) from sessionCounter where sid=#{sid}")
 	int shouldAttend(@Param("sid") int sid);
 	
-	@Select("select count(*) from sessionattendance where sid=#{sid} and uid=#{uid}")
+	@Select("select count(*) from sessionAttendance where sid=#{sid} and uid=#{uid}")
 	int actualAttend(@Param("sid") int sid, @Param("uid") int uid);
 }

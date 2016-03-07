@@ -4,9 +4,12 @@ import java.util.Date;
 
 public class Information {
 	private int id;
+	private int deptid;
+	private int uniid;
 	private String title;
 	private String content;
 	private Date time;
+	private String uniName;
 	private String deptName;
 	private int type;
 	public String getTitle() {
@@ -44,5 +47,23 @@ public class Information {
 	}
 	public void setType(int type) {
 		this.type = type;
+	}
+	public int getDeptid() {
+		return deptid;
+	}
+	public void setDeptId(int deptId) {
+		this.deptid = deptId;
+	}
+	public int getUniid() {
+		return uniid;
+	}
+	public void setUniid(int uniid) {
+		this.uniid = uniid;
+	}
+	public String getUniName() {
+		return uniName;
+	}
+	public void setUniName(String uniName) {
+		this.uniName = uniName;
 	}
 }
