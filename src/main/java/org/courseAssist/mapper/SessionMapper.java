@@ -8,13 +8,13 @@ import org.apache.ibatis.annotations.Select;
 import org.courseAssist.model.Attendance;
 
 public interface SessionMapper {
-	@Insert("insert into SessionCounter (uid, sid, signature, time) values (#{uid}, #{sid}, #{sig}, now())")
+	@Insert("insert into sessionCounter (uid, sid, signature, time) values (#{uid}, #{sid}, #{sig}, now())")
 	void createSignature(@Param("uid") int uid, @Param("sid") int sid, @Param("sig") String sig);
 	
-	@Insert("insert into SessionAttendance (uid, sid, signature, time) values (#{uid},#{sid},#{sig},now())")
+	@Insert("insert into sessionAttendance (uid, sid, signature, time) values (#{uid},#{sid},#{sig},now())")
 	void signup(@Param("uid") int uid, @Param("sid") int sid, @Param("sig") String sig);
 	
-	@Select("select signature from SessionAttendance where sid=#{sid} and uid=#{uid} "
+	@Select("select signature from sessionAttendance where sid=#{sid} and uid=#{uid} "
 			+ "and signature=#{sig} and date(time)=date(now()) order by id desc limit 1")
 	String signed(@Param("uid") int uid, @Param("sid") int sid, @Param("sig") String sig);
 	

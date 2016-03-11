@@ -18,6 +18,14 @@ public class MgrService {
 	
 	public List<Department> listDept(int uniid) { return mm.listDept(uniid); }
 	
+	public void updateDept( int id, String deptname) {
+		mm.updateDept(id, deptname);
+	}
+	
+	public void insertDept( int uniid, String deptname ) {
+		mm.insertDept(deptname, uniid);
+	}
+	
 	public List<CourseTpl> listCourses(int uniid, int start, int limit) {
 		return mm.listCourses(uniid, start, limit);
 	}

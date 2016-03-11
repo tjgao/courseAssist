@@ -219,12 +219,14 @@ public class UserController {
 		String realname = (String)req.getParameter("realname");
 		String email = (String)req.getParameter("email");
 		String mobile = (String)req.getParameter("mobile");
+		/*
 		try {
 			realname = new String(realname.getBytes("ISO8859-1"), "utf-8");
 		} catch (Exception e) {
 			logger.info(e.toString());
 			realname = "";
 		}		
+		*/
 		int uid = Integer.parseInt((String)req.getAttribute("uid"));
 		try {
 			uService.updateUserBasicInfo(uid, realname, mobile, email);

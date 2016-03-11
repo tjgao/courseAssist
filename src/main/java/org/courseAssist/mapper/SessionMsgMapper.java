@@ -18,7 +18,7 @@ public interface SessionMsgMapper {
 			+ "a.sender=b.id and receiver=#{receiver} order by id desc limit #{start}, #{limit}")
 	*/
 	@Select("select a.id,a.sender,a.receiver,c.title,a.time, b.realname as senderName, "
-			+ "b.headimg as senderHead from sessionMsg as a, user as b, msgcontent as c where "
+			+ "b.headimg as senderHead from sessionmsg as a, user as b, msgcontent as c where "
 			+ "a.sender=b.id and a.mid = c.id and receiver=#{receiver} order by id desc limit #{start},#{limit};")
 	List<SessionMsg> getReceivedMessages( @Param("receiver") int receiver, 
 			@Param("start") int start, @Param("limit") int limit);
@@ -29,7 +29,7 @@ public interface SessionMsgMapper {
 			+ "a.sender=b.id and receiver=#{receiver} order by id desc")
 	*/
 	@Select("select a.id,a.sender,a.receiver,c.title,a.time, b.realname as senderName, "
-			+ "b.headimg as senderHead from sessionMsg as a, user as b, msgcontent as c "
+			+ "b.headimg as senderHead from sessionmsg as a, user as b, msgcontent as c "
 			+ "where a.sender=b.id and c.id = a.mid and receiver=#{receiver} order by id desc")
 	List<SessionMsg> getAllReceivedMessages( @Param("receiver") int receiver);
 
@@ -40,7 +40,7 @@ public interface SessionMsgMapper {
 			+ "a.sender=b.id and receiver=#{receiver} and a.id > #{id} order by id desc")
 	*/
 	@Select("select a.id,a.sender,a.receiver,c.title,a.time, b.realname as senderName, "
-			+ "b.headimg as senderHead from sessionMsg as a, user as b, msgcontent as c "
+			+ "b.headimg as senderHead from sessionmsg as a, user as b, msgcontent as c "
 			+ "where a.sender=b.id and c.id = a.mid and receiver=#{receiver} and a.id > #{id} order by id desc ")
 	List<SessionMsg> getReceiveNewMessages( @Param("id") int id, @Param("receiver") int receiver);
 	
@@ -51,12 +51,12 @@ public interface SessionMsgMapper {
 			+ "a.sender=b.id and receiver=#{receiver} and a.id < #{id} order by id desc limit 0, #{limit}")
 	*/
 	@Select("select a.id,a.sender,a.receiver,c.title,a.time, b.realname as senderName, "
-			+ "b.headimg as senderHead from sessionMsg as a, user as b, msgcontent as c "
+			+ "b.headimg as senderHead from sessionmsg as a, user as b, msgcontent as c "
 			+ "where a.sender=b.id and c.id = a.mid and receiver=#{receiver} and a.id < #{id} order "
 			+ "by id desc limit 0, #{limit}")
 	List<SessionMsg> getReceiveOldMessages( @Param("id") int id, @Param("receiver") int receiver, @Param("limit") int limit);
 
-	@Insert("insert into sessionMsg ( receiver, sender, mid, time) "
+	@Insert("insert into sessionmsg ( receiver, sender, mid, time) "
 			+ "values (#{receiver},#{sender},#{mid},now())")
 	void sendMessage(SessionMsg sm);
 	

@@ -119,6 +119,7 @@ public class signatureController {
 		try {
 			int uid = Integer.parseInt((String) req.getAttribute("uid"));
 			User u = uService.getUserBySidUid(sid, uid);
+			logger.debug("sig = " + sig);
 			if (u == null) {
 				h.put("code", 1);
 				h.put("msg", "无法操作，此用户并未注册此课程！");
