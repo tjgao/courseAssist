@@ -71,7 +71,7 @@ public interface SessionMsgMapper {
 			+ "from sessionMsg as a, user as b where a.sender=b.id and a.id=#{id}")
 	*/
 	@Select("select a.id,a.sender,a.receiver,c.title, a.time, c.content, b.realname as "
-			+ "senderName, b.headimg as senderHead from sessionMsg as a, user as b, "
+			+ "senderName, b.headimg as senderHead from sessionmsg as a, user as b, "
 			+ "msgcontent as c where a.sender=b.id and c.id = a.mid and a.id=#{id}")
 	SessionMsg readMessage(@Param("id") int id);
 }
